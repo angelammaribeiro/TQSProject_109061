@@ -1,5 +1,6 @@
 package ua.deti.backend.dto;
 
+import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.*;
 import ua.deti.backend.model.ReservationStatus;
 import java.time.LocalDateTime;
@@ -12,11 +13,11 @@ public class ReservationDTO {
     private String userName;
 
     @NotBlank(message = "Email is required")
-    @Email(message = "Email should be valid")
+    @Pattern(regexp = "^[A-Za-z0-9][A-Za-z0-9+_.-]*[A-Za-z0-9]@[A-Za-z0-9][A-Za-z0-9-]*(\\.[A-Za-z0-9][A-Za-z0-9-]*)*\\.[A-Za-z]{2,}$", message = "Email should be valid")
     private String userEmail;
 
     @NotBlank(message = "Phone number is required")
-    @Pattern(regexp = "^\\+?[0-9\\s-]{10,}$", message = "Invalid phone number format")
+    @Pattern(regexp = "^(\\+351)?[29][1-9][0-9]{7}$", message = "Invalid phone number format")
     private String userPhone;
 
     @NotNull(message = "Reservation date is required")
@@ -25,7 +26,10 @@ public class ReservationDTO {
 
     private String token;
     private ReservationStatus status;
-    private Long mealId;
+
+    @NotNull(message = "Restaurant ID is required")
+    @OneToMany(mappedBy = "restaurantId")
+    private Long restaurantId;
 
     // Getters and Setters
     public Long getId() {
@@ -84,11 +88,11 @@ public class ReservationDTO {
         this.status = status;
     }
 
-    public Long getMealId() {
-        return mealId;
+    public Long getRestaurantId() {
+        return restaurantId;
     }
 
-    public void setMealId(Long mealId) {
-        this.mealId = mealId;
+    public void setRestaurantId(Long restaurantId) {
+        this.restaurantId = restaurantId;
     }
 } 

@@ -12,4 +12,5 @@ public interface MealService {
     Meal updateMeal(Long id, Meal meal);
     void deleteMeal(Long id);
     List<Meal> getMealsByRestaurant(Long restaurantId);
+    List<Meal> getMealsByRestaurantAndDate(Long restaurantId, LocalDate date);
 } 

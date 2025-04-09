@@ -38,13 +38,13 @@ public class ReservationIntegrationTest {
         // Use TestUtils to create a meal for the restaurant
         MealDTO createdMeal = testUtils.createTestMeal(createdRestaurant.getId());
 
-        // Create a reservation for the meal
+        // Create a reservation for the restaurant
         ReservationDTO reservationDTO = new ReservationDTO();
         reservationDTO.setUserName("Test User");
         reservationDTO.setUserEmail("test@user.com");
         reservationDTO.setUserPhone("987654321");
         reservationDTO.setReservationDate(LocalDateTime.now().plusDays(1));
-        reservationDTO.setMealId(createdMeal.getId());
+        reservationDTO.setRestaurantId(createdRestaurant.getId());
 
         ResponseEntity<ReservationDTO> reservationResponse = restTemplate.postForEntity(
             "/reservations",

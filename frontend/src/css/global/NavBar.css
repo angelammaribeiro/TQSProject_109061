@@ -1,197 +1,192 @@
-/* Navbar.css */
+/* NavBar.css */
+
 .navbar {
-    background-color: #fff;
-    height: 80px;
-    display: flex;
-    justify-content: center;
-    width: 100%;
     position: sticky;
     top: 0;
-    z-index: 100;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    background-color: #ffffff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    padding: 0.8rem 0;
+}
+
+.navbar.scrolled {
+    padding: 0.6rem 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    background-color: rgba(255, 255, 255, 0.98);
 }
 
 .navbar-container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 100%;
-    max-width: 1400px;
-    padding: 0 30px;
 }
 
 .navbar-logo {
-    color: #333;
-    font-size: 1.8rem;
-    font-weight: bold;
-    text-decoration: none;
     display: flex;
     align-items: center;
+    text-decoration: none;
+    color: #333;
+    font-weight: 700;
+    font-size: 1.3rem;
+    transition: all 0.2s ease;
 }
 
-.logo-highlight {
-    color: #3498db;
-    margin-left: 4px;
+.logo-text {
+    background: linear-gradient(135deg, #4a6da7 0%, #6c5ce7 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 800;
 }
 
-.nav-menu {
+.navbar-menu {
     display: flex;
+    align-items: center;
     list-style: none;
-    text-align: center;
     margin: 0;
     padding: 0;
 }
 
-.nav-item {
-    height: 80px;
-    display: flex;
-    align-items: center;
-}
-
-.nav-link {
-    color: #555;
-    text-decoration: none;
-    padding: 0 15px;
-    height: 100%;
-    display: flex;
-    align-items: center;
+.navbar-item {
+    margin: 0 0.6rem;
     position: relative;
-    font-weight: 500;
-    transition: all 0.3s ease;
 }
 
-.nav-link::after {
+.navbar-item.active::after {
     content: '';
     position: absolute;
-    width: 0;
+    bottom: -6px;
+    left: 0;
+    width: 100%;
     height: 3px;
-    bottom: 0;
-    left: 50%;
-    background-color: #3498db;
-    transition: all 0.3s ease;
-    transform: translateX(-50%);
+    background: linear-gradient(90deg, #4a6da7, #6c5ce7);
+    border-radius: 2px;
 }
 
-.nav-link:hover {
-    color: #3498db;
-}
-
-.nav-link:hover::after {
-    width: 70%;
-}
-
-.menu-icon {
-    display: none;
-    font-size: 1.8rem;
-    cursor: pointer;
-}
-
-.auth-buttons {
+.navbar-link {
     display: flex;
     align-items: center;
-}
-
-.login-button,
-.signup-button {
+    padding: 0.5rem 0.8rem;
     text-decoration: none;
-    padding: 8px 16px;
-    margin-left: 10px;
-    border-radius: 4px;
+    color: #444;
     font-weight: 500;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
+    border-radius: 6px;
 }
 
-.login-button {
-    color: #3498db;
-    border: 1px solid #3498db;
+.navbar-link:hover {
+    color: #4a6da7;
+    background-color: rgba(74, 109, 167, 0.08);
 }
 
-.login-button:hover {
-    background-color: rgba(52, 152, 219, 0.1);
+.navbar-item.active .navbar-link {
+    color: #4a6da7;
 }
 
-.signup-button {
-    background-color: #3498db;
-    color: white;
+.navbar-link svg {
+    margin-right: 0.5rem;
 }
 
-.signup-button:hover {
-    background-color: #2980b9;
+.navbar-mobile-toggle {
+    display: none;
+    color: #444;
+    cursor: pointer;
+    padding: 0.3rem;
+    border-radius: 4px;
+    transition: all 0.2s ease;
 }
 
-@media screen and (max-width: 960px) {
-    .nav-menu {
+.navbar-mobile-toggle:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+    color: #4a6da7;
+}
+
+/* Mobile responsive design */
+@media (max-width: 768px) {
+    .navbar-mobile-toggle {
         display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .navbar-menu {
+        position: fixed;
+        top: 70px;
+        left: -100%;
         flex-direction: column;
         width: 100%;
-        height: calc(100vh - 80px);
-        position: absolute;
-        top: 80px;
-        left: -100%;
-        opacity: 1;
-        transition: all 0.5s ease;
-        padding: 20px 0;
         background-color: white;
+        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease-out;
+        padding: 1rem 0;
+        z-index: 999;
+        border-radius: 0 0 8px 8px;
     }
 
-    .nav-menu.active {
+    .navbar-menu.active {
         left: 0;
-        opacity: 1;
-        transition: all 0.5s ease;
-        z-index: 1;
     }
 
-    .nav-item {
-        height: 60px;
+    .navbar-item {
         width: 100%;
+        margin: 0.3rem 0;
     }
 
-    .nav-link {
-        text-align: center;
-        padding: 2rem;
-        width: 100%;
-        display: table;
+    .navbar-link {
+        width: 80%;
+        margin: 0 auto;
+        padding: 0.8rem 1rem;
+        justify-content: flex-start;
     }
 
-    .nav-link::after {
+    .navbar-item.active::after {
         display: none;
     }
 
-    .menu-icon {
-        display: block;
-        position: absolute;
-        top: 0;
-        right: 0;
-        transform: translate(-100%, 60%);
-        font-size: 1.8rem;
-        cursor: pointer;
+    .navbar-item.active .navbar-link {
+        background-color: rgba(74, 109, 167, 0.1);
     }
+}
 
-    .auth-buttons {
-        position: absolute;
-        top: 80px;
-        right: 0;
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        padding: 1rem;
-        background-color: white;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        z-index: -1;
+/* Add a nice animation for menu opening */
+@keyframes fadeIn {
+    from {
         opacity: 0;
-        pointer-events: none;
+        transform: translateY(-10px);
     }
-
-    .nav-menu.active ~ .auth-buttons {
+    to {
         opacity: 1;
-        pointer-events: all;
-        z-index: 1;
+        transform: translateY(0);
     }
+}
 
-    .login-button,
-    .signup-button {
-        width: 100%;
-        margin: 5px 0;
-        text-align: center;
-    }
+.navbar-menu.active .navbar-item {
+    animation: fadeIn 0.3s ease forwards;
+    animation-delay: calc(0.05s * var(--i));
+    opacity: 0;
+}
+
+/* Add animation delays for each item */
+.navbar-menu.active .navbar-item:nth-child(1) {
+    --i: 0;
+}
+
+.navbar-menu.active .navbar-item:nth-child(2) {
+    --i: 1;
+}
+
+.navbar-menu.active .navbar-item:nth-child(3) {
+    --i: 2;
+}
+
+.navbar-menu.active .navbar-item:nth-child(4) {
+    --i: 3;
+}
+
+.navbar-menu.active .navbar-item:nth-child(5) {
+    --i: 4;
 }

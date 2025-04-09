@@ -2,7 +2,6 @@ package ua.deti.backend.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
-import java.util.List;
 
 @Entity
 @Table(name = "meals")
@@ -29,9 +28,6 @@ public class Meal {
     @ManyToOne
     @JoinColumn(name = "restaurant_id", nullable = false)
     private Restaurant restaurant;
-
-    @OneToMany(mappedBy = "meal", cascade = CascadeType.ALL)
-    private List<Reservation> reservations;
 
     // Constructors
     public Meal() {}
@@ -98,13 +94,5 @@ public class Meal {
 
     public void setRestaurant(Restaurant restaurant) {
         this.restaurant = restaurant;
-    }
-
-    public List<Reservation> getReservations() {
-        return reservations;
-    }
-
-    public void setReservations(List<Reservation> reservations) {
-        this.reservations = reservations;
     }
 } 

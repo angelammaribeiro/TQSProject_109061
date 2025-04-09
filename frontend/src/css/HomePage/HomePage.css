@@ -42,16 +42,17 @@
 }
 
 .restaurants-container {
-  width: 100%;
   max-width: 1400px;
+  margin: 0 auto;
   padding: 0 30px;
 }
 
 .restaurants-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 30px;
-  width: 100%;
+  align-items: start;
+  padding: 20px 0;
 }
 
 .restaurant-link {
@@ -93,16 +94,14 @@
 }
 
 /* Media Queries */
+@media (max-width: 1200px) {
+  .restaurants-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 @media (max-width: 768px) {
   .restaurants-grid {
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  }
-
-  .hero-section h1 {
-    font-size: 2.2rem;
-  }
-
-  .hero-section p {
-    font-size: 1.1rem;
+    grid-template-columns: 1fr;
   }
 }

@@ -3,15 +3,21 @@ package ua.deti.backend.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ua.deti.backend.dto.ReservationDTO;
+import ua.deti.backend.dto.CreateReservationDTO;
 import ua.deti.backend.model.Reservation;
+import ua.deti.backend.model.Restaurant;
 import ua.deti.backend.model.ReservationStatus;
 import ua.deti.backend.service.ReservationService;
 import ua.deti.backend.service.MealService;
+import ua.deti.backend.service.RestaurantService;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -25,20 +31,68 @@ public class ReservationController {
     @Autowired
     private MealService mealService;
 
+    @Autowired
+    private RestaurantService restaurantService;
+
     @GetMapping
     public String Hello(){
         return "Hello World";
     }
 
+    @PostMapping(value = "/create-by-name", consumes = "application/json")
+    public ResponseEntity<ReservationDTO> createReservationByRestaurantName(@RequestBody CreateReservationDTO createDTO) {
+        logger.info("POST /api/reservations/create-by-name - Creating new reservation for restaurant: {}", createDTO.getRestaurantName());
+        try {
+            // Find restaurant by name
+            Optional<Restaurant> restaurant = restaurantService.getRestaurantByName(createDTO.getRestaurantName());
+            if (restaurant.isEmpty()) {
+                logger.error("Restaurant not found with name: {}", createDTO.getRestaurantName());
+                return ResponseEntity.notFound().build();
+            }
+
+            // Check reservation limit before creating
+            if (reservationService.hasReachedReservationLimit(restaurant.get().getId())) {
+                logger.error("Restaurant {} has reached maximum reservation limit", createDTO.getRestaurantName());
+                return ResponseEntity.unprocessableEntity().build();
+            }
+
+            // Create reservation
+            Reservation reservation = new Reservation();
+            reservation.setUserName(createDTO.getUserName());
+            reservation.setUserEmail(createDTO.getUserEmail());
+            reservation.setUserPhone(createDTO.getUserPhone());
+            reservation.setReservationDate(createDTO.getReservationDate());
+            reservation.setRestaurant(restaurant.get());
+
+            // Save reservation
+            Reservation savedReservation = reservationService.createReservation(reservation);
+            return ResponseEntity.ok(convertToDTO(savedReservation));
+        } catch (IllegalStateException e) {
+            logger.error("Restaurant has reached maximum reservation limit: {}", e.getMessage());
+            return ResponseEntity.unprocessableEntity().build();
+        } catch (Exception e) {
+            logger.error("Error creating reservation: {}", e.getMessage(), e);
+            return ResponseEntity.badRequest().build();
+        }
+    }
 
     @PostMapping(consumes = "application/json")
     public ResponseEntity<ReservationDTO> createReservation(@RequestBody ReservationDTO reservationDTO) {
         logger.info("POST /api/reservations - Creating new reservation: {}", reservationDTO);
         try {
+            // Check reservation limit before creating
+            if (reservationService.hasReachedReservationLimit(reservationDTO.getRestaurantId())) {
+                logger.error("Restaurant {} has reached maximum reservation limit", reservationDTO.getRestaurantId());
+                return ResponseEntity.unprocessableEntity().build();
+            }
+
             Reservation reservation = convertToEntity(reservationDTO);
             Reservation savedReservation = reservationService.createReservation(reservation);
             ReservationDTO response = convertToDTO(savedReservation);
             return ResponseEntity.ok(response);
+        } catch (IllegalStateException e) {
+            logger.error("Restaurant has reached maximum reservation limit: {}", e.getMessage());
+            return ResponseEntity.unprocessableEntity().build();
         } catch (Exception e) {
             logger.error("Error creating reservation: {}", e.getMessage(), e);
             return ResponseEntity.badRequest().build();
@@ -91,14 +145,31 @@ public class ReservationController {
         }
     }
 
-    @GetMapping("/meal/{mealId}")
-    public ResponseEntity<List<ReservationDTO>> getReservationsByMeal(@PathVariable Long mealId) {
-        logger.info("GET /api/reservations/meal/{} - Fetching reservations by meal", mealId);
-        List<ReservationDTO> reservations = reservationService.getReservationsByMeal(mealId)
+    @GetMapping("/restaurant/{restaurantId}")
+    public ResponseEntity<List<ReservationDTO>> getReservationsByRestaurant(@PathVariable Long restaurantId) {
+        logger.info("GET /api/reservations/restaurant/{} - Fetching reservations by restaurant", restaurantId);
+        List<ReservationDTO> reservations = reservationService.getReservationsByRestaurant(restaurantId)
             .stream()
             .map(this::convertToDTO)
             .collect(Collectors.toList());
         return ResponseEntity.ok(reservations);
+    }
+
+    @GetMapping("/restaurant/{restaurantId}/date")
+    public ResponseEntity<List<ReservationDTO>> getPendingReservationsByRestaurantAndDate(
+            @PathVariable Long restaurantId,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime date) {
+        logger.info("GET /api/reservations/restaurant/{}/date - Fetching pending reservations for date {}", restaurantId, date);
+        try {
+            List<ReservationDTO> reservations = reservationService.getPendingReservationsByRestaurantAndDate(restaurantId, date)
+                .stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+            return ResponseEntity.ok(reservations);
+        } catch (Exception e) {
+            logger.error("Error fetching reservations: {}", e.getMessage(), e);
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     private ReservationDTO convertToDTO(Reservation reservation) {
@@ -110,7 +181,7 @@ public class ReservationController {
         dto.setReservationDate(reservation.getReservationDate());
         dto.setToken(reservation.getToken());
         dto.setStatus(reservation.getStatus());
-        dto.setMealId(reservation.getMeal().getId());
+        dto.setRestaurantId(reservation.getRestaurant().getId());
         return dto;
     }
 
@@ -122,8 +193,8 @@ public class ReservationController {
             throw new IllegalArgumentException("ReservationDTO cannot be null");
         }
         
-        if (dto.getMealId() == null) {
-            throw new IllegalArgumentException("Meal ID is required");
+        if (dto.getRestaurantId() == null) {
+            throw new IllegalArgumentException("Restaurant ID is required");
         }
         
         Reservation reservation = new Reservation();
@@ -134,10 +205,10 @@ public class ReservationController {
         reservation.setReservationDate(dto.getReservationDate());
         reservation.setToken(dto.getToken());
         reservation.setStatus(dto.getStatus());
-        reservation.setMeal(mealService.getMealById(dto.getMealId())
+        reservation.setRestaurant(restaurantService.getRestaurantById(dto.getRestaurantId())
             .orElseThrow(() -> {
-                logger.error("Meal not found with id: {}", dto.getMealId());
-                return new IllegalArgumentException("Meal not found with id: " + dto.getMealId());
+                logger.error("Restaurant not found with id: {}", dto.getRestaurantId());
+                return new IllegalArgumentException("Restaurant not found with id: " + dto.getRestaurantId());
             }));
         
         return reservation;

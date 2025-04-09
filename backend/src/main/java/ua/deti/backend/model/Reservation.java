@@ -30,8 +30,8 @@ public class Reservation {
     private ReservationStatus status;
 
     @ManyToOne
-    @JoinColumn(name = "meal_id", nullable = false)
-    private Meal meal;
+    @JoinColumn(name = "restaurant_id", nullable = false)
+    private Restaurant restaurant;
 
     // Constructors
     public Reservation() {}
@@ -102,11 +102,11 @@ public class Reservation {
         this.status = status;
     }
 
-    public Meal getMeal() {
-        return meal;
+    public Restaurant getRestaurant() {
+        return restaurant;
     }
 
-    public void setMeal(Meal meal) {
-        this.meal = meal;
+    public void setRestaurant(Restaurant restaurant) {
+        this.restaurant = restaurant;
     }
 } 

@@ -45,6 +45,18 @@ public class MealController {
         return ResponseEntity.ok(meals);
     }
 
+    @GetMapping("/restaurant/{restaurantId}/date/{date}")
+    public ResponseEntity<List<MealDTO>> getMealsByRestaurantAndDate(
+            @PathVariable Long restaurantId,
+            @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        logger.info("GET /meals/restaurant/{}/date/{} - Fetching meals for specific date", restaurantId, date);
+        List<MealDTO> meals = mealService.getMealsByRestaurantAndDate(restaurantId, date)
+            .stream()
+            .map(this::convertToDTO)
+            .collect(Collectors.toList());
+        return ResponseEntity.ok(meals);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<MealDTO> getMealById(@PathVariable Long id) {
         logger.info("GET /meals/{} - Fetching meal by id", id);

@@ -1,0 +1,382 @@
+/* WorkerAccess.css */
+
+/* Worker Access Button */
+.worker-access-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    color: #555;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-left: auto;
+}
+
+.worker-access-button:hover {
+    background-color: #e0e0e0;
+}
+
+/* Worker Login Modal */
+.worker-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.worker-modal {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    width: 400px;
+    max-width: 90vw;
+    overflow: hidden;
+}
+
+.worker-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    border-bottom: 1px solid #eee;
+}
+
+.worker-modal-header h2 {
+    margin: 0;
+    font-size: 1.25rem;
+    color: #333;
+}
+
+.close-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #777;
+}
+
+.worker-modal form {
+    padding: 20px;
+}
+
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 500;
+    color: #555;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 0.95rem;
+}
+
+.error-message {
+    color: #e53e3e;
+    margin-bottom: 16px;
+    font-size: 0.9rem;
+}
+
+.form-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.cancel-button {
+    padding: 8px 16px;
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    color: #555;
+    cursor: pointer;
+}
+
+.login-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background-color: #4a6da7;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.login-button:hover {
+    background-color: #3a5b8c;
+}
+
+/* Worker Panel Styles */
+.worker-panel {
+    margin-top: 24px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+}
+
+.worker-panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    background-color: #f9fafb;
+    border-bottom: 1px solid #eee;
+}
+
+.worker-panel-header h2 {
+    margin: 0;
+    font-size: 1.25rem;
+    color: #333;
+    display: flex;
+    align-items: center;
+}
+
+.worker-panel-content {
+    padding: 20px;
+}
+
+.worker-tabs {
+    display: flex;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 20px;
+}
+
+.worker-tab {
+    padding: 12px 20px;
+    cursor: pointer;
+    color: #555;
+    font-weight: 500;
+    position: relative;
+}
+
+.worker-tab.active {
+    color: #4a6da7;
+}
+
+.worker-tab.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background-color: #4a6da7;
+}
+
+/* Restaurant Date Selector */
+.restaurant-date-selector {
+    margin-bottom: 24px;
+}
+
+.restaurant-date-selector h3 {
+    margin-top: 0;
+    margin-bottom: 16px;
+    font-size: 1.1rem;
+    color: #333;
+}
+
+.form-row {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.form-row .form-group {
+    flex: 1;
+    margin-bottom: 0;
+}
+
+.date-input-container {
+    position: relative;
+}
+
+.input-icon {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #777;
+}
+
+.date-input-container input {
+    padding-left: 32px;
+}
+
+.search-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    background-color: #4a6da7;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    width: 100%;
+    justify-content: center;
+}
+
+.search-button:hover {
+    background-color: #3a5b8c;
+}
+
+.search-button:disabled {
+    background-color: #a0aec0;
+    cursor: not-allowed;
+}
+
+/* Reservations List */
+.reservations-list {
+    margin-top: 24px;
+}
+
+.reservations-list h3 {
+    margin-top: 0;
+    margin-bottom: 16px;
+    font-size: 1.1rem;
+    color: #333;
+}
+
+.reservations-list.empty {
+    padding: 20px;
+    text-align: center;
+    color: #777;
+    background-color: #f9fafb;
+    border-radius: 8px;
+    border: 1px dashed #ddd;
+}
+
+.reservation-card {
+    margin-bottom: 16px;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.reservation-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    background-color: #f9fafb;
+    border-bottom: 1px solid #eee;
+}
+
+.reservation-id {
+    font-weight: 500;
+    color: #555;
+}
+
+.reservation-details {
+    padding: 16px;
+}
+
+.detail-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.detail-icon {
+    margin-right: 8px;
+    color: #777;
+}
+
+.detail-label {
+    font-weight: 500;
+    color: #555;
+    width: 80px;
+}
+
+.detail-value {
+    color: #333;
+}
+
+.token-display {
+    padding: 12px 16px;
+    background-color: #f9fafb;
+    border-top: 1px solid #eee;
+    font-size: 0.9rem;
+}
+
+.token-label {
+    font-weight: 500;
+    color: #555;
+    margin-right: 8px;
+}
+
+.token-value {
+    color: #333;
+    font-family: monospace;
+    background-color: #eee;
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+.complete-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 10px;
+    background-color: #38a169;
+    color: white;
+    border: none;
+    border-radius: 0;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.complete-button:hover {
+    background-color: #2f855a;
+}
+
+.message-container {
+    padding: 12px 16px;
+    border-radius: 4px;
+    margin: 16px 0;
+}
+
+.message-container.error {
+    background-color: #fff5f5;
+    border: 1px solid #fed7d7;
+    color: #e53e3e;
+}
+
+.message-container.success {
+    background-color: #f0fff4;
+    border: 1px solid #c6f6d5;
+    color: #38a169;
+}
+
+/* Token Search */
+.token-search {
+    margin-bottom: 24px;
+}

@@ -144,9 +144,11 @@ const HomePage = () => {
           ) : (
               <div className="restaurants-grid">
                 {filteredRestaurants.map(restaurant => (
-                    <Link to={`/restaurants/${restaurant.id}`} key={restaurant.id} className="restaurant-link">
-                      <RestaurantCard restaurant={restaurant} />
-                    </Link>
+                    <RestaurantCard 
+                        key={restaurant.id}
+                        restaurant={restaurant} 
+                        selectedDate={selectedDate}
+                    />
                 ))}
               </div>
           )}

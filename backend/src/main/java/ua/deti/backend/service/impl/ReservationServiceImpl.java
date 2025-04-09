@@ -9,6 +9,7 @@ import ua.deti.backend.model.ReservationStatus;
 import ua.deti.backend.repository.ReservationRepository;
 import ua.deti.backend.service.ReservationService;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -22,7 +23,14 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public Reservation createReservation(Reservation reservation) {
-        logger.info("Creating new reservation for meal: {}", reservation.getMeal().getId());
+        logger.info("Creating new reservation for restaurant: {}", reservation.getRestaurant().getId());
+        
+        // Check if restaurant has reached reservation limit
+        if (hasReachedReservationLimit(reservation.getRestaurant().getId())) {
+            logger.error("Restaurant {} has reached the maximum number of reservations", reservation.getRestaurant().getId());
+            throw new IllegalStateException("Restaurant has reached the maximum number of reservations");
+        }
+        
         // Generate a unique token for the reservation
         reservation.setToken(UUID.randomUUID().toString());
         reservation.setStatus(ReservationStatus.PENDING);
@@ -61,8 +69,21 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public List<Reservation> getReservationsByMeal(Long mealId) {
-        logger.info("Fetching reservations for meal: {}", mealId);
-        return reservationRepository.findByMealId(mealId);
+    public List<Reservation> getReservationsByRestaurant(Long restaurantId) {
+        logger.info("Fetching reservations for restaurant: {}", restaurantId);
+        return reservationRepository.findByRestaurantId(restaurantId);
+    }
+
+    @Override
+    public boolean hasReachedReservationLimit(Long restaurantId) {
+        long activeReservations = reservationRepository.countActiveReservationsByRestaurantId(restaurantId);
+        logger.info("Restaurant {} has {} active reservations", restaurantId, activeReservations);
+        return activeReservations >= MAX_RESERVATIONS_PER_RESTAURANT;
+    }
+
+    @Override
+    public List<Reservation> getPendingReservationsByRestaurantAndDate(Long restaurantId, LocalDateTime date) {
+        logger.info("Fetching pending reservations for restaurant {} on date {}", restaurantId, date);
+        return reservationRepository.findPendingReservationsByRestaurantAndDate(restaurantId, date);
     }
 } 

@@ -28,6 +28,9 @@ public class Restaurant {
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
     private List<Meal> meals;
 
+    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
+    private List<Reservation> reservations;
+
     // Constructors
     public Restaurant() {}
 
@@ -91,5 +94,13 @@ public class Restaurant {
 
     public void setMeals(List<Meal> meals) {
         this.meals = meals;
+    }
+
+    public List<Reservation> getReservations() {
+        return reservations;
+    }
+
+    public void setReservations(List<Reservation> reservations) {
+        this.reservations = reservations;
     }
 } 

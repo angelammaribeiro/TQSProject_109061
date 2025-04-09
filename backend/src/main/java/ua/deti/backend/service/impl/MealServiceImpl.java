@@ -61,4 +61,10 @@ public class MealServiceImpl implements MealService {
         logger.info("Fetching all meals for restaurant: {}", restaurantId);
         return mealRepository.findByRestaurantId(restaurantId);
     }
+
+    @Override
+    public List<Meal> getMealsByRestaurantAndDate(Long restaurantId, LocalDate date) {
+        logger.info("Fetching meals for restaurant {} on date {}", restaurantId, date);
+        return mealRepository.findMealsAvailableOnDate(restaurantId, date);
+    }
 } 

@@ -7,6 +7,7 @@ import java.util.Optional;
 public interface RestaurantService {
     List<Restaurant> getAllRestaurants();
     Optional<Restaurant> getRestaurantById(Long id);
+    Optional<Restaurant> getRestaurantByName(String name);
     List<Restaurant> searchRestaurants(String query);
     Restaurant createRestaurant(Restaurant restaurant);
     Restaurant updateRestaurant(Long id, Restaurant restaurant);

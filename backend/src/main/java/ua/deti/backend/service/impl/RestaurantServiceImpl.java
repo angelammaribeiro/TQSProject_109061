@@ -31,6 +31,12 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     @Override
+    public Optional<Restaurant> getRestaurantByName(String name) {
+        logger.info("Fetching restaurant with name: {}", name);
+        return restaurantRepository.findByNameIgnoreCase(name);
+    }
+
+    @Override
     public List<Restaurant> searchRestaurants(String query) {
         logger.info("Searching restaurants with query: {}", query);
         List<Restaurant> byName = restaurantRepository.findByNameContainingIgnoreCase(query);

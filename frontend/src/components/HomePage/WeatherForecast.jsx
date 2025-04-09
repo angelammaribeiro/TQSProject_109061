@@ -79,11 +79,11 @@ const WeatherForecast = ({ weatherData, isLoading, selectedDate, onDateChange })
                 <p>
                     {weatherData ? (
                         weatherData.chanceOfRain > 0.3 ?
-                            "Don't forget your umbrella today!" :
+                            "Don't forget your umbrella!" :
                             weatherData.maxTemperature > 25 ?
                                 "It's going to be hot! Stay hydrated." :
                                 weatherData.minTemperature < 15 ?
-                                    "It's a bit chilly today. Consider bringing a jacket." :
+                                    "It's a bit chilly. Consider bringing a jacket." :
                                     "Perfect weather for visiting campus restaurants!"
                     ) : (
                         "Check the weather forecast before heading out to campus restaurants!"

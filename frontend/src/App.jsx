@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import Navbar from './components/global/NavBar';
 import Footer from './components/global/Footer';
+import ReservationsPage from "./pages/ReservationsPage.jsx";
 import './App.css';
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
             <Routes>
               <Route path="/" element={<HomePage />} />
               {/* Add more routes as needed */}
+                <Route path="/reservations" element={<ReservationsPage />} />
               <Route path="/restaurants/:id" element={<div className="content-container">Restaurant Detail Page (To be implemented)</div>} />
             </Routes>
           </main>

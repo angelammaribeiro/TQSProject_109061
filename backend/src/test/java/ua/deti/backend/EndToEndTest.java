@@ -14,10 +14,10 @@ import ua.deti.backend.config.TestConfig;
 import ua.deti.backend.dto.MealDTO;
 import ua.deti.backend.dto.ReservationDTO;
 import ua.deti.backend.dto.RestaurantDTO;
+import ua.deti.backend.model.ReservationStatus;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -39,10 +39,9 @@ public class EndToEndTest {
         restaurantDTO.setCuisineType("Italian");
         restaurantDTO.setContactInfo("test@restaurant.com");
 
-        // Remove the /api prefix in your test
         ResponseEntity<RestaurantDTO> restaurantResponse = restTemplate.postForEntity(
-            "/restaurants",  // Remove /api here since context path is already configured
-            createHttpEntityWithJson(restaurantDTO),  // Use helper method to set Content-Type
+            "/restaurants",
+            createHttpEntityWithJson(restaurantDTO),
             RestaurantDTO.class
         );
 
@@ -71,13 +70,13 @@ public class EndToEndTest {
         assertNotNull(createdMeal);
         assertNotNull(createdMeal.getId());
 
-        // 3. Create a reservation for the meal
+        // 3. Create a reservation for the restaurant
         ReservationDTO reservationDTO = new ReservationDTO();
         reservationDTO.setUserName("Test User");
         reservationDTO.setUserEmail("test@user.com");
         reservationDTO.setUserPhone("987654321");
         reservationDTO.setReservationDate(LocalDateTime.now().plusDays(1));
-        reservationDTO.setMealId(createdMeal.getId());
+        reservationDTO.setRestaurantId(createdRestaurant.getId());
 
         ResponseEntity<ReservationDTO> reservationResponse = restTemplate.postForEntity(
             "/reservations",
@@ -89,7 +88,7 @@ public class EndToEndTest {
         ReservationDTO createdReservation = reservationResponse.getBody();
         assertNotNull(createdReservation);
         assertNotNull(createdReservation.getToken());
-        assertEquals("PENDING", createdReservation.getStatus());
+        assertEquals(ReservationStatus.PENDING, createdReservation.getStatus());
 
         // 4. Get the reservation by token
         ResponseEntity<ReservationDTO> getReservationResponse = restTemplate.getForEntity(
@@ -102,10 +101,10 @@ public class EndToEndTest {
         assertNotNull(retrievedReservation);
         assertEquals(createdReservation.getToken(), retrievedReservation.getToken());
 
-        // 5. Cancel the reservation
+        // 5. Cancel the reservation - FIX: Using DELETE method as per the controller implementation
         ResponseEntity<Void> cancelResponse = restTemplate.exchange(
-            "/api/reservations/" + retrievedReservation.getToken() + "/cancel",
-            HttpMethod.PUT,
+            "/reservations/" + retrievedReservation.getToken(),
+            HttpMethod.DELETE,
             null,
             Void.class
         );
@@ -114,21 +113,20 @@ public class EndToEndTest {
 
         // 6. Verify the reservation was cancelled
         ResponseEntity<ReservationDTO> verifyResponse = restTemplate.getForEntity(
-            "/api/reservations/token/" + createdReservation.getToken(),
+            "/reservations/token/" + createdReservation.getToken(),
             ReservationDTO.class
         );
 
         assertEquals(200, verifyResponse.getStatusCodeValue());
         ReservationDTO cancelledReservation = verifyResponse.getBody();
         assertNotNull(cancelledReservation);
-        assertEquals("CANCELLED", cancelledReservation.getStatus());
-
+        assertEquals(ReservationStatus.CANCELLED, cancelledReservation.getStatus());
     }
 
-        // Helper method to create HttpEntity with JSON Content-Type
+    // Helper method to create HttpEntity with JSON Content-Type
     private <T> HttpEntity<T> createHttpEntityWithJson(T body) {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Content-Type", "application/json");
         return new HttpEntity<>(body, headers);
     }
-} 
+}
