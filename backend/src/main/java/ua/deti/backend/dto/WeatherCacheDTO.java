@@ -13,8 +13,10 @@ public class WeatherCacheDTO {
     @NotNull(message = "Date is required")
     private LocalDateTime date;
 
-    @NotBlank(message = "Forecast is required")
-    private String forecast;
+    private double maxTemperature;
+    private double minTemperature;
+    private double humidity;
+    private double chanceOfRain;
 
     private LocalDateTime timestamp;
 
@@ -43,12 +45,36 @@ public class WeatherCacheDTO {
         this.date = date;
     }
 
-    public String getForecast() {
-        return forecast;
+    public double getMaxTemperature() {
+        return maxTemperature;
     }
 
-    public void setForecast(String forecast) {
-        this.forecast = forecast;
+    public void setMaxTemperature(double maxTemperature) {
+        this.maxTemperature = maxTemperature;
+    }
+
+    public double getMinTemperature() {
+        return minTemperature;
+    }
+
+    public void setMinTemperature(double minTemperature) {
+        this.minTemperature = minTemperature;
+    }
+
+    public double getHumidity() {
+        return humidity;
+    }
+
+    public void setHumidity(double humidity) {
+        this.humidity = humidity;
+    }
+
+    public double getChanceOfRain() {
+        return chanceOfRain;
+    }
+
+    public void setChanceOfRain(double chanceOfRain) {
+        this.chanceOfRain = chanceOfRain;
     }
 
     public LocalDateTime getTimestamp() {

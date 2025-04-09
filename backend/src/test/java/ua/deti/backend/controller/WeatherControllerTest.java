@@ -26,7 +26,10 @@ class WeatherControllerTest {
     private WeatherController weatherController;
 
     private final String testLocation = "Aveiro";
-    private final String testForecast = "Sunny, 25°C";
+    private final double testMaxTemp = 25.0;
+    private final double testMinTemp = 15.0;
+    private final double testHumidity = 60.0;
+    private final double testChanceOfRain = 10.0;
     private final LocalDateTime testDate = LocalDateTime.now();
 
     @BeforeEach
@@ -40,7 +43,10 @@ class WeatherControllerTest {
         WeatherCacheDTO mockForecast = new WeatherCacheDTO();
         mockForecast.setLocation(testLocation);
         mockForecast.setDate(testDate);
-        mockForecast.setForecast(testForecast);
+        mockForecast.setMaxTemperature(testMaxTemp);
+        mockForecast.setMinTemperature(testMinTemp);
+        mockForecast.setHumidity(testHumidity);
+        mockForecast.setChanceOfRain(testChanceOfRain);
 
         when(weatherService.getWeatherForecast(anyString(), any(LocalDateTime.class)))
             .thenReturn(mockForecast);
@@ -51,9 +57,13 @@ class WeatherControllerTest {
         // Assert
         assertNotNull(response);
         assertEquals(200, response.getStatusCode().value());
-        assertNotNull(response.getBody());
-        assertEquals(testLocation, response.getBody().getLocation());
-        assertEquals(testForecast, response.getBody().getForecast());
+        WeatherCacheDTO responseBody = response.getBody();
+        assertNotNull(responseBody);
+        assertEquals(testLocation, responseBody.getLocation());
+        assertEquals(testMaxTemp, responseBody.getMaxTemperature());
+        assertEquals(testMinTemp, responseBody.getMinTemperature());
+        assertEquals(testHumidity, responseBody.getHumidity());
+        assertEquals(testChanceOfRain, responseBody.getChanceOfRain());
     }
 
     @Test

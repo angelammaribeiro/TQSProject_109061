@@ -67,6 +67,61 @@ public class EndToEndTest {
         );
         
         assertEquals(200, mealResponse.getStatusCodeValue());
+        MealDTO createdMeal = mealResponse.getBody();
+        assertNotNull(createdMeal);
+        assertNotNull(createdMeal.getId());
+
+        // 3. Create a reservation for the meal
+        ReservationDTO reservationDTO = new ReservationDTO();
+        reservationDTO.setUserName("Test User");
+        reservationDTO.setUserEmail("test@user.com");
+        reservationDTO.setUserPhone("987654321");
+        reservationDTO.setReservationDate(LocalDateTime.now().plusDays(1));
+        reservationDTO.setMealId(createdMeal.getId());
+
+        ResponseEntity<ReservationDTO> reservationResponse = restTemplate.postForEntity(
+            "/reservations",
+            createHttpEntityWithJson(reservationDTO),
+            ReservationDTO.class
+        );
+
+        assertEquals(200, reservationResponse.getStatusCodeValue());
+        ReservationDTO createdReservation = reservationResponse.getBody();
+        assertNotNull(createdReservation);
+        assertNotNull(createdReservation.getToken());
+        assertEquals("PENDING", createdReservation.getStatus());
+
+        // 4. Get the reservation by token
+        ResponseEntity<ReservationDTO> getReservationResponse = restTemplate.getForEntity(
+            "/reservations/token/" + createdReservation.getToken(),
+            ReservationDTO.class
+        );
+
+        assertEquals(200, getReservationResponse.getStatusCodeValue());
+        ReservationDTO retrievedReservation = getReservationResponse.getBody();
+        assertNotNull(retrievedReservation);
+        assertEquals(createdReservation.getToken(), retrievedReservation.getToken());
+
+        // 5. Cancel the reservation
+        ResponseEntity<Void> cancelResponse = restTemplate.exchange(
+            "/api/reservations/" + retrievedReservation.getToken() + "/cancel",
+            HttpMethod.PUT,
+            null,
+            Void.class
+        );
+
+        assertEquals(200, cancelResponse.getStatusCodeValue());
+
+        // 6. Verify the reservation was cancelled
+        ResponseEntity<ReservationDTO> verifyResponse = restTemplate.getForEntity(
+            "/api/reservations/token/" + createdReservation.getToken(),
+            ReservationDTO.class
+        );
+
+        assertEquals(200, verifyResponse.getStatusCodeValue());
+        ReservationDTO cancelledReservation = verifyResponse.getBody();
+        assertNotNull(cancelledReservation);
+        assertEquals("CANCELLED", cancelledReservation.getStatus());
 
     }
 

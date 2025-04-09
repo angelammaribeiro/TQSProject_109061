@@ -16,8 +16,14 @@ public class WeatherCache {
     @Column(nullable = false)
     private LocalDateTime date;
 
-    @Column(nullable = false, columnDefinition = "TEXT")
-    private String forecast;
+    @Column
+    private Double maxTemperature;
+    @Column
+    private Double minTemperature;
+    @Column
+    private Double humidity;
+    @Column
+    private Double chanceOfRain;
 
     @Column(nullable = false)
     private LocalDateTime timestamp;
@@ -63,7 +69,6 @@ public class WeatherCache {
     public WeatherCache(String location, LocalDateTime date, String forecast) {
         this.location = location;
         this.date = date;
-        this.forecast = forecast;
         this.timestamp = LocalDateTime.now();
     }
 
@@ -92,12 +97,36 @@ public class WeatherCache {
         this.date = date;
     }
 
-    public String getForecast() {
-        return forecast;
+    public Double getMaxTemperature() {
+        return maxTemperature;
     }
 
-    public void setForecast(String forecast) {
-        this.forecast = forecast;
+    public void setMaxTemperature(Double maxTemperature) {
+        this.maxTemperature = maxTemperature;
+    }
+
+    public Double getMinTemperature() {
+        return minTemperature;
+    }
+
+    public void setMinTemperature(Double minTemperature) {
+        this.minTemperature = minTemperature;
+    }
+
+    public Double getHumidity() {
+        return humidity;
+    }
+
+    public void setHumidity(Double humidity) {
+        this.humidity = humidity;
+    }
+
+    public Double getChanceOfRain() {
+        return chanceOfRain;
+    }
+
+    public void setChanceOfRain(Double chanceOfRain) {
+        this.chanceOfRain = chanceOfRain;
     }
 
     public LocalDateTime getTimestamp() {
